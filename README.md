@@ -115,16 +115,9 @@ Es besteht aus modularen Services, die Events erzeugen, konsumieren und transfor
 ```
 sudo apt update
 sudo apt install -y docker.io
-sudo systemctl enable docker
-sudo systemctl start docker
 ```
-2. Docker ohne sudo nutzen
-- `sudo usermod -aG docker $USER`
-danach einmal abmelden und neu anmelden
 
-
-
-## Docker IPv6 aktivieren
+2. Docker IPv6 aktivieren
 - `sudo nano /etc/docker/daemon.json`
 
 Dann Inhalt einfügen
@@ -135,6 +128,24 @@ Dann Inhalt einfügen
   "fixed-cidr-v6": "fd00:dead:beef::/64"
 }
 ```
+
+3. Docker starten
+```
+sudo systemctl enable docker
+sudo systemctl start docker
+```
+
+4. Docker ohne sudo nutzen
+- `sudo usermod -aG docker $USER`
+- danach einmal abmelden und neu anmelden
+- exit <ENTER>
+- auf powershell dann
+- wsl -d Ubuntu-24.04
+- im Linux-System `docker ps` sollte ohne sudo funktionieren
+
+
+
+
 
 Docker Daemon neustarten
 - `sudo systemctl restart docker`
