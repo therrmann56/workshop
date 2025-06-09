@@ -155,7 +155,7 @@ Docker Daemon neustarten
 ## Python & Virtual Environments
 
 1. install venv
-- `sudo apt install python3.10-venv`
+- `sudo apt install python3-venv`
 
 2. Pro App Einrichten
 ```
