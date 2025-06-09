@@ -214,7 +214,7 @@ ping6 fd00:dead:cafe::100  # MariaDB
 2. Falsche Route löschen
    - `sudo ip -6 route del fd00:dead:cafe::/64 dev <falsches-interface>`
 3. Neue Route setzen
-   - `sudo ip -6 route add fd00:dead:cafe::/64 dev <richtiges Interface br-xxxxxxxx>
+   - `sudo ip -6 route add fd00:dead:cafe::/64 dev <richtiges Interface br-xxxxxxxx>`
 4. Testen der neuen Route
    ```
    ping6 fd00:dead:cafe::100 #MariaDB
