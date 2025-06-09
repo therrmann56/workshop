@@ -153,8 +153,8 @@ Docker Daemon neustarten
 
 # GIT-Konfigurieren und -Repository auschecken
 ```
-git --global config user.name "Dein Name"
-git --global config user.email "Email"
+git config --global user.name "Dein Name"
+git config --global user.email "Email"
 git clone git@github.com:therrmann56/workshop.git
 cd workshop
 git checkout main
