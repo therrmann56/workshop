@@ -176,6 +176,8 @@ pip install -r requirements.txt
 
 # Docker Images laden und container bauen
 Im Hauptverzeichnis <workshop> folgenden Befehl aufrufen:
+- `sudo apt  install docker-compose`
+- danach
 - `docker-compose up -d`
 Danach unbedingt die Container wieder stoppen und die restliche Konfiguration abschließen
 - `docker-compose stop`
