@@ -1,38 +1,38 @@
-# ?? Distributed Order System ? Workshop & Simulation
+# Distributed Order System ? Workshop & Simulation
 
 Dieses Projekt simuliert ein verteiltes E-Commerce-Order-System mit Kafka und MariaDB.  
-Es besteht aus modularen Services, die Events erzeugen, konsumieren und transformieren ? realitätsnah und skalierbar.
+Es besteht aus modularen Services, die Events erzeugen, konsumieren und transformieren ? realitÃ¤tsnah und skalierbar.
 
 ---
 
-## ?? Module im Überblick
+## Module im Ãœberblick
 
 ### 1. **Checkout Service**
 - Simuliert Nutzer, die den Checkout durchlaufen
-- Status-Übergänge: `created` ? `AddressSubmitted` ? `PaymentMethodSubmitted` ? `CheckoutSubmitted`
-- Nur ca. **7 % der Checkouts** führen zum Status `CheckoutSubmitted`
-- Events werden im Kafka-Topic `checkout` veröffentlicht
+- Status-ÃœbergÃ¤nge: `created` ? `AddressSubmitted` ? `PaymentMethodSubmitted` ? `CheckoutSubmitted`
+- Nur ca. **7 % der Checkouts** fÃ¼hren zum Status `CheckoutSubmitted`
+- Events werden im Kafka-Topic `checkout` verÃ¶ffentlicht
 
 ### 2. **Order Service**
 - Konsumiert `CheckoutSubmitted` aus dem `checkout`-Topic
 - Erstellt `Order`-Objekte mit Status `NEW` ? `MERCHANT_ACCEPTED` ? `SHIPPED` ? `COMPLETED`
 - Simuliert auch `DISPUTED` und `CANCELLED`
-- Veröffentlicht Events im Kafka-Topic `order`
+- VerÃ¶ffentlicht Events im Kafka-Topic `order`
 
 ### 3. **Fulfillment Service**
 - Konsumiert Orders mit Status `MERCHANT_ACCEPTED` oder `SHIPPED`
-- Erstellt `Fulfillment`-Einträge in der Datenbank
+- Erstellt `Fulfillment`-EintrÃ¤ge in der Datenbank
 - Status: `SHIPPED` ? `DELIVERED`
-- Veröffentlicht Events im Kafka-Topic `fulfillment`
+- VerÃ¶ffentlicht Events im Kafka-Topic `fulfillment`
 
 ### 4. **Analytics Service**
 - Konsumiert **alle drei Topics**: `checkout`, `order`, `fulfillment`
 - Speichert jede Nachricht **append-only** in einer strukturierten MariaDB
-- Ziel: Grundlage für **KPI-Analysen**, Dashboards und Reports
+- Ziel: Grundlage fÃ¼r **KPI-Analysen**, Dashboards und Reports
 
 ---
 
-## ??? Technologien
+## Technologien
 
 | Komponente     | Technologie       |
 |----------------|-------------------|
@@ -44,9 +44,9 @@ Es besteht aus modularen Services, die Events erzeugen, konsumieren und transfor
 
 ---
 
-## ?? Zusammenarbeit ist Pflicht!
+## Zusammenarbeit ist Pflicht!
 
-> ### ?? **Ohne Kommunikation ? kein Erfolg!**
+> ### **Ohne Kommunikation - kein Erfolg!**
 >
 > Dieses Projekt lebt von Zusammenarbeit:
 >
@@ -55,46 +55,46 @@ Es besteht aus modularen Services, die Events erzeugen, konsumieren und transfor
 > - Teilt eure **Implementierungsideen**, um doppelte Arbeit zu vermeiden.
 > - Startet im Team nicht alle mit der selben Aufgabe ? **teilt euch sinnvoll auf!**
 >
-> ? **Wenn jeder für sich allein arbeitet, ist es extrem unwahrscheinlich, dass das System als Ganzes funktioniert.**  
+> **Wenn jeder fÃ¼r sich allein arbeitet, ist es extrem unwahrscheinlich, dass das System als Ganzes funktioniert.**  
 > Nur durch Austausch entsteht ein funktionierendes System.
 
 ---
 
-## ?? Ziele & Lerneffekte
+## Ziele & Lerneffekte
 
 - **Cross-Service-Kommunikation im verteilten Team**
-- Spaß in der Gruppe, Kennenlernen neuer Kollegen
-- Verständnis für Event-basierte Systemarchitekturen
+- SpaÃŸ in der Gruppe, Kennenlernen neuer Kollegen
+- VerstÃ¤ndnis fÃ¼r Event-basierte Systemarchitekturen
 - Arbeiten mit Kafka, Topics & Consumer Groups
 - Modellierung und Speicherung von Domain-Objekten
 - Ableitung von KPIs aus Event-Streams
 
 ---
 
-## ? Best Practices
+## Best Practices
 
 - Nutzt **saubere JSON-Objekte** mit festen Strukturen
-- Achtet auf **idempotente Statusübergänge**
+- Achtet auf **idempotente StatusÃ¼bergÃ¤nge**
 - Entwickelt **nicht am Topic vorbei** ? lest & schreibt Events wirklich
 - **Dokumentiert** eure Services & Statuswechsel
 
 ---
 
-## ?? Nächste Schritte
+## NÃ¤chste Schritte
 
 1. Stellt sicher, dass Kafka und MariaDB laufen
 2. Startet eure Consumer & Producer
-3. Beginnt mit einfachen Events und testet Statusübergänge
+3. Beginnt mit einfachen Events und testet StatusÃ¼bergÃ¤nge
 4. Dokumentiert eure Schnittstellen
 5. Redet miteinander! ??
 
 ---
 
-> Wenn du Unterstützung brauchst: **Fragen stellen ist kein Schwächezeichen, sondern Teamkompetenz.**
+> Wenn du UnterstÃ¼tzung brauchst: **Fragen stellen ist kein SchwÃ¤chezeichen, sondern Teamkompetenz.**
 
 ---
 
-# ?? SETUP
+# SETUP
 
 ## ? Windows: WSL 2 + Ubuntu installieren
 
@@ -103,9 +103,9 @@ Es besteht aus modularen Services, die Events erzeugen, konsumieren und transfor
    wsl --install
    wsl --set-default-version 2
 
-2. Ubuntu 22.04 über Microsoft Store installieren
+2. Ubuntu 22.04 Ã¼ber Microsoft Store installieren
 
-3. Neustart durchführen und Ubuntu einrichten
+3. Neustart durchfÃ¼hren und Ubuntu einrichten
 
 
 
@@ -127,7 +127,7 @@ danach einmal abmelden und neu anmelden
 ## Docker IPv6 aktivieren
 - `sudo nano /etc/docker/daemon.json`
 
-Dann Inhalt einfügen
+Dann Inhalt einfÃ¼gen
 
 ```json
 {
@@ -154,9 +154,14 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+# Docker Images laden und container bauen
+Im Hauptverzeichnis folgenden Befehl aufrufen:
+- `docker-compose up -d`
+Danach unbedingt die Container wieder stoppen und die restliche Konfiguration abschlieÃŸen
+- `docker-compose stop`
 
 
-## IPv6-Routing für Kafka & MariaDB testen
+## IPv6-Routing fÃ¼r Kafka & MariaDB testen
 
 1. Docker-Netzwerk-Interface finden:
 
@@ -171,7 +176,7 @@ Ergebnis
 ```
 
 2. Route setzen
-
+- Das hier gezeigte Interface br-xxxxxx dient als Beispiel. Bitte mit dem eigenen aus dem 1. Schritt ersetzen
 - `sudo ip -6 route add fd00:dead:cafe::/64 dev br-c010aaac3737`
 
 3. Testen
@@ -185,6 +190,8 @@ ping6 fd00:dead:cafe::100  # MariaDB
 
 ## MariaDB Zugriff
 
+Zugriff auf die DB vom Linux aus.
+
 1. MySQL Client installieren
 
 - `sudo apt install mariadb-client-core-10.6`
@@ -193,7 +200,7 @@ ping6 fd00:dead:cafe::100  # MariaDB
 
 - `mysql -h 'fd00:dead:cafe::100' -P 3306 -u user -p`
 
-3. Tabellen prüfen
+3. Tabellen prÃ¼fen
 ```
 USE analytics;
 SHOW TABLES;
@@ -202,7 +209,7 @@ DESC checkout;
 
 
 
-## Zugriff von Windows aus (z.?B. DBeaver, MySQL Workbench)
+## Zugriff vom Windows-Host aus (z.?B. DBeaver, MySQL Workbench)
 
 1. IPv4-Adresse des WSL2-Netzwerks finden (Powershell, Windows-Terminal):
 
