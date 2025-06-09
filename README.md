@@ -103,7 +103,7 @@ Es besteht aus modularen Services, die Events erzeugen, konsumieren und transfor
    wsl --install
    wsl --set-default-version 2
 
-2. Ubuntu 22.04 über Microsoft Store installieren
+2. `wsl --install Ubuntu24.04
 
 3. Neustart durchführen und Ubuntu einrichten
 
