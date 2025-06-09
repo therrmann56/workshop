@@ -143,14 +143,23 @@ sudo systemctl start docker
 - wsl -d Ubuntu-24.04
 - im Linux-System `docker ps` sollte ohne sudo funktionieren
 
-
-
-
-
 Docker Daemon neustarten
 - `sudo systemctl restart docker`
 
+# SSH-Keys für Github anlegen
+- bitte Passphrase und E-Mail angeben
+- `ssh-keygen -t rsa -b 4096 -C "deine@email.de"`
+- Den Key mit E-Mail-Adresse bitte zu mir schicken ich trage den bei github ein.
 
+# GIT-Konfigurieren und -Repository auschecken
+```
+git --global config user.name "Dein Name"
+git --global config user.email "Email"
+git clone git@github.com:therrmann56/workshop.git
+cd workshop
+git checkout main
+git push -u origin main
+```
 
 ## Python & Virtual Environments
 
