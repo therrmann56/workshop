@@ -227,7 +227,7 @@ Zugriff auf die DB vom Linux aus.
 
 1. MySQL Client installieren
 
-- `sudo apt install mariadb-client-core-10.6`
+- `sudo apt install mariadb-client-core mariadb-client`
 
 2. Mit IPv6 verbinden
 
