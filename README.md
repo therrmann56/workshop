@@ -208,7 +208,7 @@ ping6 fd00:dead:cafe::10  # Kafka
 ping6 fd00:dead:cafe::100  # MariaDB
 ```
 
-## **(Optional)** Falls Host trotz Route nicht erreichbar oder keine Route gesetzt werden konnte
+## **(Optional)** Falls Container trotz Route nicht erreichbar oder keine Route gesetzt werden konnte
 1. Route kontrollieren mit:
    - `ip -6 route | grep cafe`
 2. Falsche Route löschen
