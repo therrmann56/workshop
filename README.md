@@ -146,12 +146,12 @@ sudo systemctl start docker
 Docker Daemon neustarten
 - `sudo systemctl restart docker`
 
-# SSH-Keys für Github anlegen
+## SSH-Keys für Github anlegen
 - bitte Passphrase und E-Mail angeben
 - `ssh-keygen -t rsa -b 4096 -C "deine@email.de"`
 - Den Key mit E-Mail-Adresse bitte zu mir schicken ich trage den bei github ein.
 
-# GIT-Konfigurieren und -Repository auschecken
+## GIT-Konfigurieren und -Repository auschecken
 ```
 git config --global user.name "Dein Name"
 git config --global user.email "Email"
@@ -174,7 +174,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-# Docker Images laden und container bauen
+## Docker Images laden und container bauen
 Im Hauptverzeichnis <workshop> folgenden Befehl aufrufen:
 - `sudo apt  install docker-compose`
 - danach
@@ -208,7 +208,18 @@ ping6 fd00:dead:cafe::10  # Kafka
 ping6 fd00:dead:cafe::100  # MariaDB
 ```
 
-
+## **(Optional)** Falls Host trotz Route nicht erreichbar oder keine Route gesetzt werden konnte
+1. Route kontrollieren mit:
+   - `ip -6 route | grep cafe`
+2. Falsche Route löschen
+   - `sudo ip -6 route del fd00:dead:cafe::/64 dev <falsches-interface>`
+3. Neue Route setzen
+   - `sudo ip -6 route add fd00:dead:cafe::/64 dev <richtiges Interface br-xxxxxxxx>
+4. Testen der neuen Route
+   ```
+   ping6 fd00:dead:cafe::100 #MariaDB
+   ping6 fd00:dead:cafe::10  #Kafka
+   ```
 
 ## MariaDB Zugriff
 
