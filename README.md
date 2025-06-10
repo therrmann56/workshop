@@ -146,19 +146,12 @@ sudo systemctl start docker
 Docker Daemon neustarten
 - `sudo systemctl restart docker`
 
-## SSH-Keys für Github anlegen
-- bitte Passphrase und E-Mail angeben
-- `ssh-keygen -t rsa -b 4096 -C "deine@email.de"`
-- Den Key mit E-Mail-Adresse bitte zu mir schicken ich trage den bei github ein.
+## Git auf Linux-Host installieren
+- `sudo apt-get install git`
 
-## GIT-Konfigurieren und -Repository auschecken
+## GIT-Repository
 ```
-git config --global user.name "Dein Name"
-git config --global user.email "Email"
-git clone git@github.com:therrmann56/workshop.git
-cd workshop
-git checkout main
-git push -u origin main
+git clone https://github.com/therrmann56/workshop.git
 ```
 
 ## Python & Virtual Environments
