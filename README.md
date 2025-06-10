@@ -75,8 +75,9 @@ Es besteht aus modularen Services, die Events erzeugen, konsumieren und transfor
 
 - Nutzt **saubere JSON-Objekte** mit festen Strukturen
 - Achtet auf **idempotente Statusübergänge**
-- Entwickelt **nicht am Topic vorbei** ? lest & schreibt Events wirklich
-- **Dokumentiert** eure Services & Statuswechsel
+- Entwickelt **nicht am Topic vorbei** - lest & schreibt Events wirklich
+
+>  Nur der erzeugende Service darf eine Entität (z. B. Order, Fulfillment, Checkout) im zugehörigen Topic veröffentlichen. Andere dürfen sie nur lesen und lokal verarbeiten nicht publizieren oder speichern.
 
 ---
 
@@ -86,7 +87,7 @@ Es besteht aus modularen Services, die Events erzeugen, konsumieren und transfor
 2. Startet eure Consumer & Producer
 3. Beginnt mit einfachen Events und testet Statusübergänge
 4. Dokumentiert eure Schnittstellen
-5. Redet miteinander! ??
+5. Redet miteinander!
 
 ---
 
@@ -106,7 +107,6 @@ Es besteht aus modularen Services, die Events erzeugen, konsumieren und transfor
 2. `wsl --install Ubuntu-24.04`
 
 3. Neustart durchführen und Ubuntu einrichten
-
 
 
 ## Docker unter Ubuntu in WSL 2 installieren
