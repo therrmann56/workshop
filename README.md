@@ -102,7 +102,6 @@ Es besteht aus modularen Services, die Events erzeugen, konsumieren und transfor
 1. **WSL 2 aktivieren:**
    ```powershell
    wsl --install
-   wsl --set-default-version 2
 
 2. `wsl --install Ubuntu-24.04`
 
