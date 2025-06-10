@@ -1,4 +1,4 @@
-# Distributed Order System - Workshop & Simulation
+# Distributed Order System - Simulation
 
 Dieses Projekt simuliert ein verteiltes E-Commerce-Order-System mit Kafka und MariaDB.  
 Es besteht aus modularen Services, die Events erzeugen, konsumieren und transformieren.
