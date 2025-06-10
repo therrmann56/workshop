@@ -262,5 +262,11 @@ sudo apt install dos2unix
 dos2unix path/to/script.sh
 ```
 
+# Happy Coding - Empfehlung Visual Studio Code mit Python und Docker Extension :)
+Ihr könnt gezielt einzelne Services mit docker-compose im Hintergrund starten
+- `docker-compose up -d kafka init-kafka`
+- startet Kafka und initialisiert die Topics.
+- Vergesst nicht eure venv zusetzen in den jeweiligen Applikations-Verzeichnissen.
+
 
 
