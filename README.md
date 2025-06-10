@@ -97,7 +97,7 @@ Es besteht aus modularen Services, die Events erzeugen, konsumieren und transfor
 
 # SETUP
 
-## ? Windows: WSL 2 + Ubuntu installieren
+## Windows 11: WSL 2 + Ubuntu installieren
 
 1. **WSL 2 aktivieren:**
    ```powershell
