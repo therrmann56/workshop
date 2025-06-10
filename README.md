@@ -9,24 +9,24 @@ Es besteht aus modularen Services, die Events erzeugen, konsumieren und transfor
 
 ### 1. **Checkout Service**
 - Simuliert Nutzer, die den Checkout durchlaufen
-- Status-Übergänge: `created` ? `AddressSubmitted` ? `PaymentMethodSubmitted` ? `CheckoutSubmitted`
+- Status-Übergänge: `created` -> `AddressSubmitted` -> `PaymentMethodSubmitted` -> `CheckoutSubmitted`
 - Nur ca. **7 % der Checkouts** führen zum Status `CheckoutSubmitted`
 - Events werden im Kafka-Topic `checkout` veröffentlicht
 
 ### 2. **Order Service**
 - Konsumiert `CheckoutSubmitted` aus dem `checkout`-Topic
-- Erstellt `Order`-Objekte mit Status `NEW` ? `MERCHANT_ACCEPTED` ? `SHIPPED` ? `COMPLETED`
+- Erstellt `Order`-Objekte mit Status `NEW` -> `MERCHANT_ACCEPTED` -> `SHIPPED` -> `COMPLETED`
 - Simuliert auch `DISPUTED` und `CANCELLED`
 - Veröffentlicht Events im Kafka-Topic `order`
 
 ### 3. **Fulfillment Service**
 - Konsumiert Orders mit Status `MERCHANT_ACCEPTED` oder `SHIPPED`
 - Erstellt `Fulfillment`-Einträge in der Datenbank
-- Status: `SHIPPED` ? `DELIVERED`
+- Status: `SHIPPED` -> `DELIVERED`
 - Veröffentlicht Events im Kafka-Topic `fulfillment`
 
 ### 4. **Analytics Service**
-- Konsumiert **alle drei Topics**: `checkout`, `order`, `fulfillment`
+- Konsumiert **alle drei Topics**: `checkout`, `order`, `fulfillment` mit eigener Consumer-Group.
 - Speichert jede Nachricht **append-only** in einer strukturierten MariaDB
 - Ziel: Grundlage für **KPI-Analysen**, Dashboards und Reports
 
