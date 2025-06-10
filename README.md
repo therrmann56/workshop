@@ -91,7 +91,7 @@ Es besteht aus modularen Services, die Events erzeugen, konsumieren und transfor
 
 ---
 
-> Wenn du Unterstützung brauchst: **Fragen stellen ist kein Schwächezeichen, sondern Teamkompetenz.**
+> Wenn du Unterstützung brauchst: **Fragen, Fragen und nochmals Fragen und zwar deine Kollegen**
 
 ---
 
