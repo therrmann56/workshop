@@ -9,8 +9,6 @@ from sqlalchemy import create_engine, Column, String, Integer, DECIMAL, DateTime
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 
-from checkout.main import delivery_report
-
 Base = declarative_base()
 
 DB_URI = 'mysql+pymysql://user:userpw@[fd00:dead:cafe::100]:3306/analytics'
@@ -22,6 +20,12 @@ class Fulfillment(Base):
     fulfillment_id = Column(String(36), primary_key=True)
     order_id = Column(String(36), primary_key=True)
     status = Column(String(36))
+
+def delivery_report(err, msg):
+    if err is not None:
+        print(f"? Delivery failed: {err}")
+    else:
+        print(f"? Delivered to {msg.topic()} [{msg.partition()}]")
 
 def create_fulfillment_object(order):
     if order["status"] == "MERCHANT_ACCEPTED":
