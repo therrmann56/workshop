@@ -4,10 +4,26 @@
 import json
 import uuid
 from datetime import datetime
-from confluent_kafka import Consumer, KafkaException
+from confluent_kafka import Producer, Consumer, KafkaException
 from sqlalchemy import create_engine, Column, String, Integer, DECIMAL, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
+
+from checkout.main import delivery_report
+
+
+class Fulfillment(Base):
+    __tablename__ = 'fulfillment'
+    fulfillment_id = Column(String(36), primary_key=True)
+    order_id = Column(String(36), primary_key=True)
+    status = Column(String(36))
+
+def create_fulfillment_object(order):
+    return {
+        "order_id": order.order_id,
+        "fulfillment_id": str(uuid.uuid4()),
+        "status": "SHIPPED"
+    }
 
 input_path = "data/logs.txt"
 output_path = "data/filtered_logs.txt"
@@ -37,8 +53,15 @@ consumer = Consumer(kafka_conf_merchant_accepted)
 consumer.subscribe(['order'])
 print("? Warte auf Order-Events ...")
 
+conf = {
+    'bootstrap.servers': '[fd00:dead:cafe::10]:9092',
+    'client.id': 'fulfillment-producer'
+}
+
+producer = Producer(conf)
+
 try:
-    while true:
+    while True:
         msg = consumer.poll(1.0)
         if msg is None:
             continue
@@ -50,9 +73,20 @@ try:
         try:
             payload = json.loads(msg.value().decode('utf-8'))
             if payload.get("status") == "MERCHANT_ACCEPTED":
-                # FULFILLMENT
+                event = create_fulfillment_object(payload)
+                producer.produce(
+                    topic="fulfillment",
+                    key=event["fulfillment_id"],
+                    value=json.dumps(event),
+                    callback=delivery_report
+                )
             elif payload.get("status") == "SHIPPED":
-                # Completed
+                producer.produce(
+                    topic="fulfillment",
+                    key=event["fulfillment_id"],
+                    value=json.dumps(event),
+                    callback=delivery_report
+                )
 
 
 except:
