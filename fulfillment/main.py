@@ -11,7 +11,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 Base = declarative_base()
 
-DB_URI = 'mysql+pymysql://user:userpw@[fd00:dead:cafe::100]:3306/analytics'
+DB_URI = 'mysql+pymysql://user:userpw@[fd00:dead:cafe::100]:3306/fulfillment'
 engine = create_engine(DB_URI, echo=True)
 Session = sessionmaker(bind=engine)
 
@@ -48,11 +48,6 @@ if __name__ == "__main__":
             if " 200 " in line:
                 outfile.write(line)
     print(f"Gefilterte Logzeilen nach {output_path} geschrieben.")
-
-
-DB_URI = 'mysql+pymysql://user:userpw@[fd00:dead:cafe::100]:3306/fulfillment'
-engine = create_engine(DB_URI, echo=True)
-Session = sessionmaker(bind=engine)
 
 
 # === Kafka Consumer ===
