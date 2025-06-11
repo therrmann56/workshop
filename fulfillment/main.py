@@ -20,7 +20,7 @@ Session = sessionmaker(bind=engine)
 class Fulfillment(Base):
     __tablename__ = 'fulfillment'
     fulfillment_id = Column(String(36), primary_key=True)
-    order_id = Column(String(36), primary_key=True, unique=True)
+    order_id = Column(String(36), primary_key=True)
     status = Column(String(36))
 
 def create_fulfillment_object(order):
@@ -30,7 +30,7 @@ def create_fulfillment_object(order):
         fulfillmentStatus = "DELIVERED"
 
     return {
-        "order_id": order.order_id,
+        "order_id": order.get("order_id"),
         "fulfillment_id": str(uuid.uuid4()),
         "status": fulfillmentStatus,
     }
@@ -44,6 +44,11 @@ if __name__ == "__main__":
             if " 200 " in line:
                 outfile.write(line)
     print(f"Gefilterte Logzeilen nach {output_path} geschrieben.")
+
+
+DB_URI = 'mysql+pymysql://user:userpw@[fd00:dead:cafe::100]:3306/fulfillment'
+engine = create_engine(DB_URI, echo=True)
+Session = sessionmaker(bind=engine)
 
 
 # === Kafka Consumer ===
@@ -81,13 +86,19 @@ try:
             if payload.get("status") != "MERCHANT_ACCEPTED" and payload.get("status") != "SHIPPED":
                 print("? Wrong Order Status received - do not process: "+ payload.get('status'))
 
-            event = create_fulfillment_object(payload)
-
             if payload.get("status") == "MERCHANT_ACCEPTED":
+                # create fulfillment_object
+                fulfillment_object = create_fulfillment_object(payload)
+
+                # save in db
+                session.add(fulfillment_object)
+                session.commit()
+
+                # produce into db
                 producer.produce(
                     topic="fulfillment",
-                    key=event["fulfillment_id"],
-                    value=json.dumps(event),
+                    key=fulfillment_object["fulfillment_id"],
+                    value=json.dumps(fulfillment_object),
                     callback=delivery_report
                 )
                 print("? Received MERCHANT_ACCEPTED - SHIPPED")
@@ -95,8 +106,8 @@ try:
             if payload.get("status") == "SHIPPED":
                 producer.produce(
                     topic="fulfillment",
-                    key=event["fulfillment_id"],
-                    value=json.dumps(event),
+                    key=fulfillment_object["fulfillment_id"],
+                    value=json.dumps(fulfillment_object),
                     callback=delivery_report
                 )
 
