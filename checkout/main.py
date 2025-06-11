@@ -2,18 +2,24 @@ import json
 import time
 import uuid
 from datetime import datetime
-from confluent_kafka import Producer
+from confluent_kafka import Producer, KafkaException, Consumer
 
 # Konfiguration (angepasst auf IPv6 Setup)
-conf = {
+pconf = {
     'bootstrap.servers': '[fd00:dead:cafe::10]:9092',
     'client.id': 'checkout-producer'
-    ''
 }
 
-consumer_config = {}
 
-producer = Producer(conf)
+cconf = {
+    'bootstrap.servers': '[fd00:dead:cafe::10]:9092',
+    'group.id': 'checkout-group',
+    'auto.offset.reset': 'latest'
+}
+
+producer = Producer(pconf)
+consumer = Consumer(cconf)
+consumer.subscribe(['checkout'])
 
 def create_checkout_event():
     return {
@@ -43,7 +49,16 @@ def delivery_report(err, msg):
     else:
         print(f"? Delivered to {msg.topic()} [{msg.partition()}]")
 
+def processConsumer():
+    msg = consumer.poll(1.0)
+    if msg is None:
+        pass
+
+    payload = json.loads(msg.value().decode('utf-8'))
+    print(f"📦 Empfangen: {payload}")
+
 print("?? Starte Checkout Producer...")
+print("✅ Warte auf Kafka-Nachrichten im Topic 'checkout'...")
 
 try:
     while True:
@@ -54,8 +69,10 @@ try:
             value=json.dumps(event),
             callback=delivery_report
         )
-        producer.poll(0)
-        time.sleep(3)
+        #producer.poll(0)
+        time.sleep(0.3)
+
+        processConsumer()
 except KeyboardInterrupt:
     print("? Producer gestoppt.")
 finally:
