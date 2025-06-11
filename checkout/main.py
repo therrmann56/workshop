@@ -21,6 +21,8 @@ producer = Producer(pconf)
 consumer = Consumer(cconf)
 consumer.subscribe(['checkout'])
 
+count = 0
+
 def create_checkout_event():
     return {
         "checkout_id": str(uuid.uuid4()),
@@ -39,7 +41,7 @@ def create_checkout_event():
             "city": "Musterstadt",
             "country": "DE"
         },
-        "status": "CheckoutSubmitted",
+        "status": "created",
         "created_at": datetime.utcnow().isoformat() + "Z"
     }
 
@@ -56,6 +58,21 @@ def processConsumer():
 
     payload = json.loads(msg.value().decode('utf-8'))
     print(f"📦 Empfangen: {payload}")
+    changestatus(payload)
+
+
+def changestatus(payload):
+    if payload['status'] == 'created':
+        payload['status'] = 'AddressSubmitted'
+    if payload['status'] == 'AddressSubmitted':
+        payload['status'] = 'PaymentMethodSubmitted'
+    if payload['status'] == 'PaymentMethodSubmitted':
+       payload['status'] = 'CheckoutSubmitted'
+
+    submitMsg(payload)
+
+def submitMsg(payload):
+    print(f"📦 New Payload: {payload}")
 
 print("?? Starte Checkout Producer...")
 print("✅ Warte auf Kafka-Nachrichten im Topic 'checkout'...")
