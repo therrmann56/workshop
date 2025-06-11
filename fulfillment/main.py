@@ -11,18 +11,28 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from checkout.main import delivery_report
 
+Base = declarative_base()
+
+DB_URI = 'mysql+pymysql://user:userpw@[fd00:dead:cafe::100]:3306/analytics'
+engine = create_engine(DB_URI, echo=True)
+Session = sessionmaker(bind=engine)
 
 class Fulfillment(Base):
     __tablename__ = 'fulfillment'
     fulfillment_id = Column(String(36), primary_key=True)
-    order_id = Column(String(36), primary_key=True)
+    order_id = Column(String(36), primary_key=True, unique=True)
     status = Column(String(36))
 
 def create_fulfillment_object(order):
+    if order["status"] == "MERCHANT_ACCEPTED":
+        fulfillmentStatus = "SHIPPED"
+    else:
+        fulfillmentStatus = "DELIVERED"
+
     return {
         "order_id": order.order_id,
         "fulfillment_id": str(uuid.uuid4()),
-        "status": "SHIPPED"
+        "status": fulfillmentStatus,
     }
 
 input_path = "data/logs.txt"
@@ -34,11 +44,6 @@ if __name__ == "__main__":
             if " 200 " in line:
                 outfile.write(line)
     print(f"Gefilterte Logzeilen nach {output_path} geschrieben.")
-
-
-DB_URI = 'mysql+pymysql://user:userpw@[fd00:dead:cafe::100]:3306/analytics'
-engine = create_engine(DB_URI, echo=True)
-Session = sessionmaker(bind=engine)
 
 
 # === Kafka Consumer ===
@@ -72,15 +77,22 @@ try:
 
         try:
             payload = json.loads(msg.value().decode('utf-8'))
+
+            if payload.get("status") != "MERCHANT_ACCEPTED" and payload.get("status") != "SHIPPED":
+                print("? Wrong Order Status received - do not process: "+ payload.get('status'))
+
+            event = create_fulfillment_object(payload)
+
             if payload.get("status") == "MERCHANT_ACCEPTED":
-                event = create_fulfillment_object(payload)
                 producer.produce(
                     topic="fulfillment",
                     key=event["fulfillment_id"],
                     value=json.dumps(event),
                     callback=delivery_report
                 )
-            elif payload.get("status") == "SHIPPED":
+                print("? Received MERCHANT_ACCEPTED - SHIPPED")
+
+            if payload.get("status") == "SHIPPED":
                 producer.produce(
                     topic="fulfillment",
                     key=event["fulfillment_id"],
@@ -88,7 +100,8 @@ try:
                     callback=delivery_report
                 )
 
-
+                print("? RECEIVED SHIPPED - DELIVERED")
 except:
-
+    print("? Aborted through User")
 finally:
+    consumer.close()
