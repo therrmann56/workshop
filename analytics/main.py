@@ -71,7 +71,7 @@ try:
             raise KafkaException(msg.error())
 
         payload = json.loads(msg.value().decode('utf-8'))
-        print(f"📦 Empfangen: {payload}")
+        print(f"📦 Empfangen: {msg.topic()} - {payload}")
 
         session = Session()
         try:
