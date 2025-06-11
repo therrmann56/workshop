@@ -2,7 +2,7 @@
 CREATE DATABASE IF NOT EXISTS analytics;
 USE analytics;
 
--- Tabellen für Checkouts
+-- Tabellen fï¿½r Checkouts
 CREATE TABLE IF NOT EXISTS checkout (
     checkout_id VARCHAR(36) PRIMARY KEY,
     user_id VARCHAR(36),
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS cart_item (
     FOREIGN KEY (checkout_id) REFERENCES checkout(checkout_id) ON DELETE CASCADE
 );
 
--- Neue Tabellen für Orders
+-- Neue Tabellen fï¿½r Orders
 
 CREATE TABLE IF NOT EXISTS `order` (
     order_id VARCHAR(36) PRIMARY KEY,
@@ -64,5 +64,13 @@ CREATE TABLE IF NOT EXISTS order_cart_item (
     quantity INT,
     price DECIMAL(10,2),
     FOREIGN KEY (order_id) REFERENCES `order`(order_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS fulfillment (
+    fulfillment_id VARCHAR(36),
+    order_id VARCHAR(36),
+    status VARCHAR(20),
+    created_at DATETIME,
+    PRIMARY KEY (fulfillment_id)
 );
 
