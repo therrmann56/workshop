@@ -2,6 +2,8 @@
 # Dieses Skript liest Logzeilen ein und filtert nur Zeilen mit dem Statuscode 200.
 
 import json
+import random
+import time
 import uuid
 from datetime import datetime
 from confluent_kafka import Producer, Consumer, KafkaException
@@ -92,6 +94,9 @@ try:
                 print("? Received MERCHANT_ACCEPTED - SHIPPED")
 
             if payload.get("status") == "SHIPPED":
+                sleep_time = random.uniform(1, 10)
+                time.sleep(sleep_time)
+
                 fulfillment_object = session.query(Fulfillment).filter(order_id = payload.get("order_id")).first()
 
                 fulfillment_object.status = "DELIVERED"
