@@ -33,11 +33,11 @@ def create_fulfillment_object(order):
     else:
         fulfillmentStatus = "DELIVERED"
 
-    return Fulfillment{
-        "order_id": order.get("order_id"),
-        "fulfillment_id": str(uuid.uuid4()),
-        "status": fulfillmentStatus,
-    }
+    return Fulfillment(
+        order_id = order.get("order_id"),
+        fulfillment_id = str(uuid.uuid4()),
+        status = fulfillmentStatus,
+    )
 
 input_path = "data/logs.txt"
 output_path = "data/filtered_logs.txt"
