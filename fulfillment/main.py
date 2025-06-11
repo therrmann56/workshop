@@ -20,7 +20,7 @@ class Fulfillment(Base):
 
 def create_fulfillment_object(order):
     return {
-        "order_id": order.order_id,
+        "order_id": order.get("order_id"),
         "fulfillment_id": str(uuid.uuid4()),
         "status": "SHIPPED"
     }
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     print(f"Gefilterte Logzeilen nach {output_path} geschrieben.")
 
 
-DB_URI = 'mysql+pymysql://user:userpw@[fd00:dead:cafe::100]:3306/analytics'
+DB_URI = 'mysql+pymysql://user:userpw@[fd00:dead:cafe::100]:3306/fulfillment'
 engine = create_engine(DB_URI, echo=True)
 Session = sessionmaker(bind=engine)
 
@@ -73,11 +73,18 @@ try:
         try:
             payload = json.loads(msg.value().decode('utf-8'))
             if payload.get("status") == "MERCHANT_ACCEPTED":
-                event = create_fulfillment_object(payload)
+                # create fulfillment_object
+                fulfillment_object = create_fulfillment_object(payload)
+
+                # save in db
+                session.add(fulfillment_object)
+                session.commit()
+
+                # produce into db
                 producer.produce(
                     topic="fulfillment",
-                    key=event["fulfillment_id"],
-                    value=json.dumps(event),
+                    key=fulfillment_object["fulfillment_id"],
+                    value=json.dumps(fulfillment_object),
                     callback=delivery_report
                 )
             elif payload.get("status") == "SHIPPED":
