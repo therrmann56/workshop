@@ -39,6 +39,7 @@ def create_fulfillment_object(order):
         order_id = order.get("order_id"),
         fulfillment_id = str(uuid.uuid4()),
         status = fulfillmentStatus,
+        created_at = datetime.utcnow(),
     )
 
 # === Kafka Consumer ===
