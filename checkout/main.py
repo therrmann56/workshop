@@ -39,7 +39,7 @@ def create_checkout_event():
             "city": "Musterstadt",
             "country": "DE"
         },
-        "status": "pending",
+        "status": "CheckoutSubmitted",
         "created_at": datetime.utcnow().isoformat() + "Z"
     }
 
