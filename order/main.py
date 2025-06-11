@@ -74,6 +74,7 @@ try:
         if msg.error():
             raise KafkaException(msg.error())
 
+        session = Session()
         try:
             payload = json.loads(msg.value().decode('utf-8'))
             if payload.get("status") != "CheckoutSubmitted":
@@ -109,7 +110,7 @@ try:
                 ) for item in payload.get("cart_items", [])
             ]
 
-            session = Session()
+            
             session.add(order)
             session.commit()
             print(f"? Order {order.order_id} gespeichert.")
