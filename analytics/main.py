@@ -58,7 +58,7 @@ conf = {
 }
 
 consumer = Consumer(conf)
-consumer.subscribe(['checkout'])
+consumer.subscribe(['checkout', 'fulfillment'])
 
 print("✅ Warte auf Kafka-Nachrichten im Topic 'checkout'...")
 
