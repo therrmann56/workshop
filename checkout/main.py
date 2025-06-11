@@ -8,7 +8,10 @@ from confluent_kafka import Producer
 conf = {
     'bootstrap.servers': '[fd00:dead:cafe::10]:9092',
     'client.id': 'checkout-producer'
+    ''
 }
+
+consumer_config = {}
 
 producer = Producer(conf)
 
@@ -52,7 +55,7 @@ try:
             callback=delivery_report
         )
         producer.poll(0)
-        time.sleep(0.3)
+        time.sleep(3)
 except KeyboardInterrupt:
     print("? Producer gestoppt.")
 finally:
