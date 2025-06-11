@@ -52,7 +52,7 @@ def delivery_report(err, msg):
 def processConsumer():
     msg = consumer.poll(1.0)
     if msg is None:
-        pass
+        return
 
     payload = json.loads(msg.value().decode('utf-8'))
     print(f"📦 Empfangen: {payload}")
