@@ -11,7 +11,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 Base = declarative_base()
 
-DB_URI = 'mysql+pymysql://user:userpw@[fd00:dead:cafe::100]:3306/fulfillment'
+DB_URI = 'mysql+pymysql://user:userpw@[fd00:dead:cafe::100]:3306/analytics'
 engine = create_engine(DB_URI, echo=True)
 Session = sessionmaker(bind=engine)
 
