@@ -71,6 +71,6 @@ CREATE TABLE IF NOT EXISTS fulfillment (
     order_id VARCHAR(36),
     status VARCHAR(20),
     created_at DATETIME,
-    PRIMARY KEY (fulfillment_id),
+    PRIMARY KEY (fulfillment_id)
 );
 
