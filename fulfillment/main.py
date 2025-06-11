@@ -75,42 +75,43 @@ try:
 
             if payload.get("status") != "MERCHANT_ACCEPTED" and payload.get("status") != "SHIPPED":
                 print("? Wrong Order Status received - do not process: "+ payload.get('status'))
-
-            if payload.get("status") == "MERCHANT_ACCEPTED":
-                # create fulfillment_object
-                fulfillment_object = create_fulfillment_object(payload)
-
-                # save in db
-                session.add(fulfillment_object)
-                session.commit()
-
-                # produce into db
-                producer.produce(
-                    topic="fulfillment",
-                    key=fulfillment_object["fulfillment_id"],
-                    value=json.dumps(fulfillment_object),
-                    callback=delivery_report
-                )
-                print("? Received MERCHANT_ACCEPTED - SHIPPED")
-
-            if payload.get("status") == "SHIPPED":
+                continue
+            else:
                 sleep_time = random.uniform(1, 10)
                 time.sleep(sleep_time)
 
-                fulfillment_object = session.query(Fulfillment).filter(order_id = payload.get("order_id")).first()
+                if payload.get("status") == "MERCHANT_ACCEPTED":
+                    # create fulfillment_object
+                    fulfillment_object = create_fulfillment_object(payload)
 
-                fulfillment_object.status = "DELIVERED"
+                    # save in db
+                    session.add(fulfillment_object)
+                    session.commit()
 
-                session.commit()
+                    # produce into db
+                    producer.produce(
+                        topic="fulfillment",
+                        key=fulfillment_object["fulfillment_id"],
+                        value=json.dumps(fulfillment_object),
+                        callback=delivery_report
+                    )
+                    print("? Received MERCHANT_ACCEPTED - SHIPPED")
 
-                producer.produce(
-                    topic="fulfillment",
-                    key=fulfillment_object["fulfillment_id"],
-                    value=json.dumps(fulfillment_object),
-                    callback=delivery_report
-                )
+                if payload.get("status") == "SHIPPED":
+                    fulfillment_object = session.query(Fulfillment).filter(order_id=payload.get("order_id")).first()
 
-                print("? RECEIVED SHIPPED - DELIVERED")
+                    fulfillment_object.status = "DELIVERED"
+
+                    session.commit()
+
+                    producer.produce(
+                        topic="fulfillment",
+                        key=fulfillment_object["fulfillment_id"],
+                        value=json.dumps(fulfillment_object),
+                        callback=delivery_report
+                    )
+
+                    print("? RECEIVED SHIPPED - DELIVERED")
         except SQLAlchemyError as db_err:
             print("? DB-Fehler:", db_err)
             session.rollback()
