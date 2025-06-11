@@ -1,8 +1,10 @@
 import json
 import time
 import uuid
+import random
 from datetime import datetime
 from confluent_kafka import Producer, KafkaException, Consumer
+
 
 # Konfiguration (angepasst auf IPv6 Setup)
 pconf = {
@@ -52,27 +54,42 @@ def delivery_report(err, msg):
         print(f"? Delivered to {msg.topic()} [{msg.partition()}]")
 
 def processConsumer():
+
     msg = consumer.poll(1.0)
     if msg is None:
         return
 
     payload = json.loads(msg.value().decode('utf-8'))
     print(f"📦 Empfangen: {payload}")
+
     changestatus(payload)
 
 
 def changestatus(payload):
+
+    if payload['status'] == 'CheckoutSubmitted':
+        return
+
     if payload['status'] == 'created':
         payload['status'] = 'AddressSubmitted'
-    if payload['status'] == 'AddressSubmitted':
+    elif payload['status'] == 'AddressSubmitted':
         payload['status'] = 'PaymentMethodSubmitted'
-    if payload['status'] == 'PaymentMethodSubmitted':
-       payload['status'] = 'CheckoutSubmitted'
+    elif payload['status'] == 'PaymentMethodSubmitted':
+        payload['status'] = 'CheckoutSubmitted'
+        if random.randint(1, 100) > 7:
+            return
 
     submitMsg(payload)
 
 def submitMsg(payload):
     print(f"📦 New Payload: {payload}")
+    producer.produce(
+        topic="checkout",
+        key=event["checkout_id"],
+        value=json.dumps(payload),
+        callback=delivery_report
+    )
+
 
 print("?? Starte Checkout Producer...")
 print("✅ Warte auf Kafka-Nachrichten im Topic 'checkout'...")
