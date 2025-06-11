@@ -104,6 +104,12 @@ try:
                 print("? Received MERCHANT_ACCEPTED - SHIPPED")
 
             if payload.get("status") == "SHIPPED":
+                fulfillment_object = session.query(Fulfillment).filter(order_id = payload.get("order_id")).first()
+
+                fulfillment_object.status = "DELIVERED"
+
+                session.commit()
+
                 producer.produce(
                     topic="fulfillment",
                     key=fulfillment_object["fulfillment_id"],
@@ -112,7 +118,14 @@ try:
                 )
 
                 print("? RECEIVED SHIPPED - DELIVERED")
-except:
+        except SQLAlchemyError as db_err:
+            print("? DB-Fehler:", db_err)
+            session.rollback()
+        except Exception as parse_err:
+            print("? Verarbeitungsfehler:", parse_err)
+        finally:
+            session.close()
+except KeyboardInterrupt:
     print("? Aborted through User")
 finally:
     consumer.close()
